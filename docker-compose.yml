@@ -7,7 +7,7 @@ services:
       - node.name=elasticsearch
       - discovery.type=single-node
       - xpack.security.enabled=true
-      - ELASTIC_PASSWORD=${}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - "ES_JAVA_OPTS=-Xms8G -Xmx8G"
     ulimits:
       memlock:
@@ -35,7 +35,7 @@ services:
       - ELASTICSEARCH_URL=https://elasticsearch:9200
       - ELASTICSEARCH_HOSTS=https://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=your_password_here
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
     volumes:
       - ${ELK_CERT_PATH}:/usr/share/kibana/config/cert.pem
       - ${ELK_CERT_KEY_PATH}:/usr/share/kibana/config/cert.key
@@ -62,7 +62,7 @@ services:
     environment:
       - ELASTICSEARCH_HOSTS=https://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=your_password_here
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
     networks:
       - elk-net
 
