@@ -39,7 +39,7 @@ services:
     volumes:
       - ${ELK_CERT_PATH}:/usr/share/kibana/config/cert.pem
       - ${ELK_CERT_KEY_PATH}:/usr/share/kibana/config/cert.key
-1
+
     ports:
       - 5601:5601
     networks:
