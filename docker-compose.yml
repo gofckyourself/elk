@@ -8,6 +8,7 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=true
       - ELASTIC_PASSWORD=your_password_here
+      - "ES_JAVA_OPTS=-Xms8G -Xmx8G"
     ulimits:
       memlock:
         soft: -1
@@ -21,6 +22,11 @@ services:
       - 9300:9300
     networks:
       - elk-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl --cacert /usr/share/elasticsearch/config/cert.pem -s http://localhost:9200/_cluster/health | grep -vq '\"status\":\"red\"'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.7.0
