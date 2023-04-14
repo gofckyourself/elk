@@ -35,7 +35,7 @@ services:
       - ELASTICSEARCH_URL=https://elasticsearch:9200
       - ELASTICSEARCH_HOSTS=https://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
     volumes:
       - ${ELK_CERT_PATH}:/usr/share/kibana/config/cert.pem
       - ${ELK_CERT_KEY_PATH}:/usr/share/kibana/config/cert.key
