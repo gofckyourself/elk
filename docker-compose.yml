@@ -37,7 +37,7 @@ services:
       - ELASTICSEARCH_URL=https://elasticsearch:9200
       - ELASTICSEARCH_HOSTS=https://elasticsearch:9200
       - ELASTIC_USERNAME=${ELASTICSEARCH_USERNAME}
-      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       - xpack.reporting.kibanaServer.hostname=localhost
       - xpack.reporting.roles.enabled=false
     volumes:
