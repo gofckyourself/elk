@@ -16,8 +16,7 @@ services:
         hard: -1
     volumes:
       - ./elasticsearch/data:/usr/share/elasticsearch/data
-      - ${ELK_CERT_PATH}:/usr/share/elasticsearch/config/cert.pem
-      - ${ELK_CERT_KEY_PATH}:/usr/share/elasticsearch/config/cert.key
+      - ${ELK_CERT_PATH}:/usr/share/elasticsearch/config/
     ports:
       - 9200:9200
       - 9300:9300
@@ -36,13 +35,13 @@ services:
     environment:
       - ELASTICSEARCH_URL=https://elasticsearch:9200
       - ELASTICSEARCH_HOSTS=https://elasticsearch:9200
-      - ELASTIC_USERNAME=${ELASTICSEARCH_USERNAME}
+      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
       - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       - xpack.reporting.kibanaServer.hostname=localhost
       - xpack.reporting.roles.enabled=false
     volumes:
-      - ${ELK_CERT_PATH}:/usr/share/kibana/config/cert.pem
-      - ${ELK_CERT_KEY_PATH}:/usr/share/kibana/config/cert.key
+      - ./certs:/usr/share/kibana/config/
+      - ${ELK_KIBANA_KEYSTORE_PATH}:/usr/share/kibana/data/kibana.keystore
     depends_on: 
       - elasticsearch
     
