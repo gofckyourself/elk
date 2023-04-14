@@ -36,6 +36,8 @@ services:
       - ELASTICSEARCH_HOSTS=https://elasticsearch:9200
       - ELASTICSEARCH_USERNAME=kibana
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - xpack.reporting.kibanaServer.hostname=elk.svel.ru
+      - xpack.reporting.roles.enabled=false
     volumes:
       - ${ELK_CERT_PATH}:/usr/share/kibana/config/cert.pem
       - ${ELK_CERT_KEY_PATH}:/usr/share/kibana/config/cert.key
