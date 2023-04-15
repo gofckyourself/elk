@@ -6,17 +6,22 @@ services:
     environment:
       - node.name=elasticsearch
       - discovery.type=single-node
-      - xpack.security.enabled=true
-      - ELASTIC_USERNAME=${ELASTICSEARCH_USERNAME}
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
       - "ES_JAVA_OPTS=-Xms8G -Xmx8G"
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.keystore.path=$ES_HOME/config/elasticsearch.p12
+      - xpack.security.http.ssl.truststore.path=$ES_HOME/config/elasticsearch.p12
+      - xpack.security.http.ssl.client_authentication=required
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
       - ./elasticsearch/data:/usr/share/elasticsearch/data
-      - ${ELK_CERT_PATH}:/usr/share/elasticsearch/config/
+      - ./certs/elk-ca.pem:/usr/share/elasticsearch/config/elk-ca.pem
+      - ./certs/elk.crt:/usr/share/elasticsearch/config/elasticsearch.crt
+      - ./certs/elk.key :/usr/share/elasticsearch/config/elasticsearch.key
+      - ./certs/elasticsearch.p12:/usr/share/elasticsearch/config/elasticsearch.p12
     ports:
       - 9200:9200
       - 9300:9300
@@ -35,13 +40,12 @@ services:
     environment:
       - ELASTICSEARCH_URL=https://elasticsearch:9200
       - ELASTICSEARCH_HOSTS=https://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=${ELASTICSEARCH_USERNAME}
       - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       - xpack.reporting.kibanaServer.hostname=localhost
       - xpack.reporting.roles.enabled=false
     volumes:
       - ./certs:/usr/share/kibana/config/
-      - ${ELK_KIBANA_KEYSTORE_PATH}:/usr/share/kibana/data/kibana.keystore
+      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
     depends_on: 
       - elasticsearch
     
