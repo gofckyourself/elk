@@ -1,112 +1,77 @@
-version: '3.7'
+version: '3.5'
+
+
+# will contain all elasticsearch data.
+volumes:
+  elasticsearch-data:
+
+secrets:
+  elasticsearch.keystore:
+    file: ./secrets/elasticsearch.keystore
+  elastic.certificates:
+    file: ./secrets/elastic-certificates.p12
+
 services:
-
-  setup:
-    build:
-      context: setup/
-      args:
-        ELASTIC_VERSION: ${ELASTIC_VERSION}
-    init: true
-    volumes:
-      - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
-      - ./setup/lib.sh:/lib.sh:ro,Z
-      - ./setup/roles:/roles:ro,Z
-    environment:
-      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD:-}
-      LOGSTASH_INTERNAL_PASSWORD: ${LOGSTASH_INTERNAL_PASSWORD:-}
-      KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
-      METRICBEAT_INTERNAL_PASSWORD: ${METRICBEAT_INTERNAL_PASSWORD:-}
-      FILEBEAT_INTERNAL_PASSWORD: ${FILEBEAT_INTERNAL_PASSWORD:-}
-      HEARTBEAT_INTERNAL_PASSWORD: ${HEARTBEAT_INTERNAL_PASSWORD:-}
-      MONITORING_INTERNAL_PASSWORD: ${MONITORING_INTERNAL_PASSWORD:-}
-      BEATS_SYSTEM_PASSWORD: ${BEATS_SYSTEM_PASSWORD:-}
-    networks:
-      - elk-net
-    depends_on:
-      - elasticsearch
-
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:$ELASTIC_VERSION
-    container_name: elasticsearch
+    build:
+      context: elasticsearch/
+      args:
+        ELK_VERSION: ${ELK_VERSION}
+    restart: unless-stopped
     environment:
-      - node.name=elasticsearch
-      - discovery.type=single-node
-      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - "ES_JAVA_OPTS=-Xms8G -Xmx8G"
-      - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.keystore.path=$ES_HOME/config/elasticsearch.p12
-      - xpack.security.http.ssl.truststore.path=$ES_HOME/config/elasticsearch.p12
-      - xpack.security.http.ssl.client_authentication=required
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTIC_CLUSTER_NAME: ${ELASTIC_CLUSTER_NAME}
+      ELASTIC_NODE_NAME: ${ELASTIC_NODE_NAME}
+      ELASTIC_INIT_MASTER_NODE: ${ELASTIC_INIT_MASTER_NODE}
+      ELASTIC_DISCOVERY_SEEDS: ${ELASTIC_DISCOVERY_SEEDS}
+      ES_JAVA_OPTS: -Xmx${ELASTICSEARCH_HEAP} -Xms${ELASTICSEARCH_HEAP}
+      bootstrap.memory_lock: "true"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+      - ./elasticsearch/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    secrets:
+      - source: elasticsearch.keystore
+        target: /usr/share/elasticsearch/config/elasticsearch.keystore
+      - source: elastic.certificates
+        target: /usr/share/elasticsearch/config/certs/elastic-certificates.p12
+    ports:
+      - "9200:9200"
+      - "9300:9300"
     ulimits:
       memlock:
         soft: -1
         hard: -1
-    volumes:
-      - ./elasticsearch/data:/usr/share/elasticsearch/data
-      - ./certs/elk-ca.pem:/usr/share/elasticsearch/config/elk-ca.pem
-      - ./certs/elk.crt:/usr/share/elasticsearch/config/elasticsearch.crt
-      - ./certs/elk.key :/usr/share/elasticsearch/config/elasticsearch.key
-      - ./certs/elasticsearch.p12:/usr/share/elasticsearch/config/elasticsearch.p12
-    ports:
-      - 9200:9200
-      - 9300:9300
-    networks:
-      - elk-net
-    
-    healthcheck:
-      test: ["CMD-SHELL", "curl --cacert /usr/share/elasticsearch/config/cert.pem -s http://localhost:9200/_cluster/health | grep -vq '\"status\":\"red\"'"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:$ELASTIC_VERSION
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_URL=https://elasticsearch:9200
-      - ELASTICSEARCH_HOSTS=https://elasticsearch:9200
-      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
-      - xpack.reporting.kibanaServer.hostname=localhost
-      - xpack.reporting.roles.enabled=false
-    volumes:
-      - ./certs:/usr/share/kibana/config/
-      - ./kibana/config/kibana.yml:/usr/share/kibana/config/kibana.yml:ro,Z
-    depends_on: 
-      - elasticsearch
-    
-    ports:
-      - 5601:5601
-    networks:
-      - elk-net
-    healthcheck:
-      test: ["CMD-SHELL", "curl -k -s http://localhost:5601/login | grep -q 'Kibana'"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-    
+      nofile:
+        soft: 200000
+        hard: 200000
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:$ELASTIC_VERSION
-    container_name: logstash
+    build:
+      context: logstash/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    restart: unless-stopped
     volumes:
-      - ./logstash/pipeline/:/usr/share/logstash/pipeline/
-      - ./logstash/config/:/usr/share/logstash/config/
-    ports:
-      - 5000:5000
-      - 9600:9600
+      - ./logstash/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro
+      - ./logstash/pipeline/logstash.conf:/usr/share/logstash/pipeline/logstash.conf:ro
     environment:
-      - ELASTICSEARCH_HOSTS=https://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
-    networks:
-      - elk-net
-    depends_on:
-      - elasticsearch
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTICSEARCH_HOST_PORT: ${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}
+      LS_JAVA_OPTS: "-Xmx${LOGSTASH_HEAP} -Xms${LOGSTASH_HEAP}"
 
-networks:
-  elk-net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 172.22.0.0/16
+  kibana:
+    build:
+      context: kibana/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    restart: unless-stopped
+    volumes:
+      - ./kibana/config/:/usr/share/kibana/config:ro
+    environment:
+      ELASTIC_USERNAME: ${ELASTIC_USERNAME}
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      ELASTICSEARCH_HOST_PORT: ${ELASTICSEARCH_HOST}:${ELASTICSEARCH_PORT}
+    ports:
+      - "5601:5601"
