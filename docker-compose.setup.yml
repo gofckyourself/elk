@@ -13,5 +13,3 @@ services:
       - ./setup/:/setup/
     environment:
       ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
-    environment:
-      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
