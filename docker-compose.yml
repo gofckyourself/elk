@@ -217,11 +217,27 @@ services:
 volumes:
   certs:
     driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./data/certs
   esdata01:
     driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./data/esdata01
   esdata02:
     driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./data/esdata02
   esdata03:
     driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./data/esdata03
   kibanadata:
     driver: local
