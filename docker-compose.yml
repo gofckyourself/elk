@@ -1,4 +1,4 @@
-version: "2.2"
+version: "3.7"
 
 services:
   es01:
@@ -11,6 +11,7 @@ services:
       - node.name=es01
       - cluster.name=${CLUSTER_NAME}
       - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
     mem_limit: ${MEM_LIMIT}
     ulimits:
       memlock:
