@@ -8,8 +8,6 @@ services:
     ports:
       - ${ES_PORT}:9200
     environment:
-      - node.name=es01
-      - cluster.name=${CLUSTER_NAME}
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
     mem_limit: ${MEM_LIMIT}
