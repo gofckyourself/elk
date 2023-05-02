@@ -34,8 +34,10 @@ services:
       - SERVERNAME=kibana
       - ELASTICSEARCH_HOSTS=http://es01:9200
       - SERVER_SSL_ENABLED=true
-      - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/elk.crt
-      - SERVER_SSL_KEY=/usr/share/kibana/config/certs/key.pem
+      - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/elk.cer
+      - SERVER_SSL_KEY=/usr/share/kibana/config/certs/elk.key
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/config/certs/ca.crt
+      - SERVER_SSL_KEYPASSPHRASE=Start08!
       - ELASTICSEARCH_USERNAME=kibana
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
     mem_limit: ${MEM_LIMIT}
