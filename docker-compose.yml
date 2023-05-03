@@ -53,7 +53,7 @@ services:
       - SERVER_SSL_KEYPASSPHRASE=Start08!
       - ELASTICSEARCH_USERNAME=kibana
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
-      - 
+       
     mem_limit: ${MEM_LIMIT}
     healthcheck:
       test: ["CMD-SHELL", "curl -s -I http://localhost:5601"]
