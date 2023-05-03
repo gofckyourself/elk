@@ -24,7 +24,7 @@ services:
       - node.name=es01
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
-      - ELASTIC_PASSWORD=${ES_PASSWORD}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
 
     mem_limit: ${MEM_LIMIT}
     ulimits:
