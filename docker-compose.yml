@@ -20,6 +20,8 @@ services:
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    networks:
+      - elastic
 
 
     mem_limit: ${MEM_LIMIT}
@@ -51,6 +53,9 @@ services:
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTEDSAVEDOBJECTS_PASSWORD}
       - XPACK_REPORTING_KIBANASERVER_HOSTNAME=elk2.svel.ru
+    networks:
+      - elastic
+
        
     mem_limit: ${MEM_LIMIT}
     healthcheck:
