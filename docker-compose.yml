@@ -20,6 +20,7 @@ services:
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTEDSAVEDOBJECTS_PASSWORD}
 
     mem_limit: ${MEM_LIMIT}
     ulimits:
