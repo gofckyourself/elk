@@ -21,7 +21,6 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate 
       - xpack.security.transport.ssl.certificate=$CERTS_DIR/es01/elk.crt
       - xpack.security.transport.ssl.key=$CERTS_DIR/es01/elk.key
-      - node.name=es01
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
