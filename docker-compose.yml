@@ -4,9 +4,9 @@ services:
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
-      - esdata01:/usr/share/elasticsearch/data
-      - certs:/usr/share/elasticsearch/config/certs
-      - certs/elk.p12:/usr/share/elasticsearch/config/elk.p12
+      - ./data/esdata01:/usr/share/elasticsearch/data
+      - ./certs:/usr/share/elasticsearch/config/certs
+      - ./certs/elk.p12:/usr/share/elasticsearch/config/elk.p12
     ports:
       - ${ES_PORT}:9200
     environment:
