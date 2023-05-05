@@ -19,6 +19,7 @@ services:
       - xpack.security.transport.ssl.verification_mode=certificate
       - xpack.security.http.ssl.key=$CERTS_DIR/es01/elk.key
       - xpack.security.http.ssl.certificate=$CERTS_DIR/es01/elk.crt
+      - xpack.security.transport.ssl.keystore.path=/usr/share/elasticsearch/config/elk.p12
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
