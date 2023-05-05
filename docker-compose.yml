@@ -77,3 +77,5 @@ volumes:
       o: bind
       type: none
       device: ./data/kibana
+networks:
+  elastic:
