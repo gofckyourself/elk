@@ -4,9 +4,11 @@ services:
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
-      - ./data/esdata01:/usr/share/elasticsearch/data
+      - esdata01:/usr/share/elasticsearch/data
+      - keystore/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
       - ./certs:$CERTS_DIR
       - ./certs/elk.p12:/usr/share/elasticsearch/config/elk.p12
+
     ports:
       - ${ES_PORT}:9200
     environment:
@@ -20,6 +22,7 @@ services:
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+      - KEYSTORE_PASSWORD=${KEYSTORE_PASSWORD}
     networks:
       - elastic
 
@@ -71,6 +74,12 @@ volumes:
       o: bind
       type: none
       device: ./data/esdata01
+  keystore:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./keystore
   kibanadata:
     driver: local
     driver_opts:
