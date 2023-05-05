@@ -30,7 +30,7 @@ services:
         soft: -1
         hard: -1
     healthcheck:
-      test: ["CMD-SHELL", "curl -s http://localhost:9200"]
+      test: ["CMD-SHELL", "curl -s https://localhost:9200"]
       interval: 10s
       timeout: 10s
       retries: 120
@@ -44,7 +44,7 @@ services:
       - ${KIBANA_PORT}:5601
     environment:
       - SERVERNAME=kibana
-      - ELASTICSEARCH_HOSTS=http://es01:9200
+      - ELASTICSEARCH_HOSTS=https://es01:9200
       - SERVER_SSL_ENABLED=true
       - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/elk.crt
       - SERVER_SSL_KEY=/usr/share/kibana/config/certs/elk.key
@@ -52,14 +52,14 @@ services:
       - ELASTICSEARCH_USERNAME=kibana
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
       - XPACK_ENCRYPTEDSAVEDOBJECTS_ENCRYPTIONKEY=${ENCRYPTEDSAVEDOBJECTS_PASSWORD}
-      - XPACK_REPORTING_KIBANASERVER_HOSTNAME=elk2.svel.ru
+      - XPACK_REPORTING_KIBANASERVER_HOSTNAME=elk.svel.ru
     networks:
       - elastic
 
        
     mem_limit: ${MEM_LIMIT}
     healthcheck:
-      test: ["CMD-SHELL", "curl -s -I http://localhost:5601"]
+      test: ["CMD-SHELL", "curl -s -I https://localhost:5601"]
       interval: 10s
       timeout: 10s
       retries: 120
