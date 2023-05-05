@@ -20,7 +20,7 @@ services:
       - xpack.security.http.ssl.key=$CERTS_DIR/es01/elk.key
       - xpack.security.http.ssl.certificate=$CERTS_DIR/es01/elk.crt
       - xpack.security.transport.ssl.keystore.path=/usr/share/elasticsearch/config/elk.p12
-      - xpack.security.transport.ssl.keystore.password=${KEYSTORE_PASSWORD}
+      - xpack.security.transport.ssl.keystore.password='Start08!'
       - xpack.security.transport.ssl.truststore.password=${KEYSTORE_PASSWORD}
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
