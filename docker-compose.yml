@@ -8,6 +8,7 @@ services:
       - ./keystore/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
       - ./certs:$CERTS_DIR
       - ./certs/elk.p12:/usr/share/elasticsearch/config/elk.p12
+      - ./certs/ca:/usr/local/share/ca-certificates
 
     ports:
       - ${ES_PORT}:9200
