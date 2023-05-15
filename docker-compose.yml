@@ -13,13 +13,10 @@ services:
       - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - node.name=es01
-      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.enabled=false
       - xpack.security.http.ssl.enabled=true
-      - xpack.security.transport.ssl.verification_mode=certificate
-      - xpack.security.transport.ssl.key=$CERTS_DIR/es01/elk.key
-      - xpack.security.transport.ssl.certificate=$CERTS_DIR/es01/elk.crt
       - xpack.security.http.ssl.key=$CERTS_DIR/es01/elk.key
-      - xpack.security.http.ssl.certificate=$CERTS_DIR/es01/elk.crt  
+      - xpack.security.http.ssl.certificate=$CERTS_DIR/es01/elk.crt
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
