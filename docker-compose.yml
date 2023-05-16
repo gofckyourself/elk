@@ -22,7 +22,8 @@ services:
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - KIBANA_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_USERNAME=kibana
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
 
     networks:
       - elastic
