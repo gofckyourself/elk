@@ -22,8 +22,6 @@ services:
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - ELASTICSEARCH_USERNAME=kibana
-      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
 
     networks:
       - elastic
@@ -53,8 +51,8 @@ services:
       - SERVER_SSL_ENABLED=true
       - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/elk.crt
       - SERVER_SSL_KEY=/usr/share/kibana/config/certs/elk.key
-      - ELASTICSEARCH_USERNAME=kibana
-      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       - SERVER_SSL_KEYPASSPHRASE=${KEYPASSPHRASE}
       - xpack.security.http.ssl.certificate_authorities=/usr/share/kibana/config/certs/ca.crt
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/config/certs/ca.crt
