@@ -55,6 +55,8 @@ services:
       - SERVER_SSL_KEYPASSPHRASE=${KEYPASSPHRASE}
     networks:
       - elastic
+    depends_on:
+      - es01
 
        
     mem_limit: ${MEM_LIMIT}
