@@ -56,6 +56,7 @@ services:
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
       - SERVER_SSL_KEYPASSPHRASE=${KEYPASSPHRASE}
       - xpack.security.http.ssl.certificate_authorities=/usr/share/kibana/config/certs/ca.crt
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/config/certs/ca.crt
     networks:
       - elastic
     depends_on:
