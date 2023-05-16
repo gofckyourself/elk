@@ -50,9 +50,9 @@ services:
       - SERVER_SSL_ENABLED=true
       - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/elk.crt
       - SERVER_SSL_KEY=/usr/share/kibana/config/certs/elk.key
-      - SERVER_SSL_KEYPASSPHRASE=Start08!
       - ELASTICSEARCH_USERNAME=kibana
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - SERVER_SSL_KEYPASSPHRASE=${KEYPASSPHRASE}
     networks:
       - elastic
 
