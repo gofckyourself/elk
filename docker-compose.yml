@@ -40,6 +40,14 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+    command: >
+      bash -c '
+        echo "Waiting for Elasticsearch availability";
+        until curl -s --cacert /usr/share/kibana/config/certs/ca.crt https://es01:9200 | grep -q "missing authentication credentials"; do sleep 30; done;
+        echo "Setting kibana_system password";
+        until curl -s -X POST --cacert /usr/share/kibana/config/certs/ca.crt -u "elastic:${ELASTIC_PASSWORD}" -H "Content-Type: application/json" https://es01:9200/_security/user/kibana_system/_password -d "{\"password\":\"${KIBANA_PASSWORD}\"}" | grep -q "^{}"; do sleep 10; done;
+        echo "All done!";
+      '
     volumes:
       - kibanadata:/usr/share/kibana/data
       - ./certs:/usr/share/kibana/config/certs
@@ -52,6 +60,8 @@ services:
       - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/elk.crt
       - SERVER_SSL_KEY=/usr/share/kibana/config/certs/elk.key
       - SERVER_SSL_KEYPASSPHRASE=${KEYPASSPHRASE}
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
       - xpack.security.http.ssl.certificate_authorities=/usr/share/kibana/config/certs/ca.crt
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/config/certs/ca.crt
     networks:
