@@ -23,7 +23,7 @@ services:
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - KEYSTORE_PASSWORD=${elastic.keystore.secure_password}
+      - KEYSTORE_PASSWORD=${KEYSTORE_PWD}
 
     networks:
       - elastic
