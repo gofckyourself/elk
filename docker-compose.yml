@@ -26,6 +26,7 @@ services:
       - elastic
 
 ##  kibana:
+  kibana:
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
     volumes:
       - ./data/kibana:/usr/share/kibana/data
