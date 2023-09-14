@@ -6,7 +6,7 @@ services:
     volumes:
       - esdata01:/usr/share/elasticsearch/data
       - ./certs:$CERTS_DIR
-      - ./keystore/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
+#      - ./keystore/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
 
     ports:
       - ${ES_PORT}:9200
@@ -54,8 +54,8 @@ services:
       - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/elk.crt
       - SERVER_SSL_KEY=/usr/share/kibana/config/certs/elk.key
       - SERVER_SSL_KEYPASSPHRASE=${KEYPASSPHRASE}
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}
       - xpack.security.http.ssl.certificate_authorities=/usr/share/kibana/config/certs/ca.crt
       - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/config/certs/ca.crt
     networks:
