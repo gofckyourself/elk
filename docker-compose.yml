@@ -6,7 +6,7 @@ services:
     volumes:
       - esdata01:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
-      - esconfig01:/usr/share/elasticsearch/config/
+      - esconfig01/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
 
     ports:
       - ${ES_PORT}:9200
