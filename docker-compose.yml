@@ -83,7 +83,7 @@ volumes:
     driver_opts:
       o: bind
       type: none
-      device: ./data/esconfig
+      device: ./esconfig
   certs:
     driver: local
     driver_opts:
