@@ -5,8 +5,8 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
       - esdata01:/usr/share/elasticsearch/data
-      - ./certs:$CERTS_DIR
-#      - ./keystore/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
+      - certs:$CERTS_DIR
+      - esconfig01:/usr/share/elasticsearch/config/
 
     ports:
       - ${ES_PORT}:9200
@@ -44,7 +44,7 @@ services:
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
     volumes:
       - kibanadata:/usr/share/kibana/data
-      - ./certs:/usr/share/kibana/config/certs
+      - certs:/usr/share/kibana/config/certs
     ports:
       - ${KIBANA_PORT}:5601
     environment:
@@ -78,6 +78,18 @@ volumes:
       o: bind
       type: none
       device: ./data/esdata01
+  esconfig01:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./data/esconfig
+  certs:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ./certs
   kibanadata:
     driver: local
     driver_opts:
