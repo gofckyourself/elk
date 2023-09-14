@@ -4,14 +4,12 @@ services:
   es01:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     volumes:
-      - esdata01:/usr/share/elasticsearch/data
-      - certs:$CERTS_DIR
-      - ./keystore/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
+      - ./data/esdata01:/usr/share/elasticsearch/data
+      - ./certs:$CERTS_DIR
 
     ports:
       - ${ES_PORT}:9200
     environment:
-      - bootstrap.memory_lock=true
       - xpack.security.enabled=true
       - node.name=es01
       - xpack.security.transport.ssl.enabled=true
@@ -23,28 +21,15 @@ services:
       - discovery.type=single-node
       - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-      - KEYSTORE_PASSWORD=${KEYSTORE_PWD}
 
     networks:
       - elastic
 
-
-    mem_limit: ${MEM_LIMIT}
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    healthcheck:
-      test: ["CMD-SHELL", "curl -s https://localhost:9200"]
-      interval: 10s
-      timeout: 10s
-      retries: 120
-
-  kibana:
+##  kibana:
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
     volumes:
-      - kibanadata:/usr/share/kibana/data
-      - certs:/usr/share/kibana/config/certs
+      - ./data/kibana:/usr/share/kibana/data
+      - ./certs:/usr/share/kibana/config/certs
     ports:
       - ${KIBANA_PORT}:5601
     environment:
@@ -63,32 +48,5 @@ services:
     depends_on:
       - es01
 
-       
-    mem_limit: ${MEM_LIMIT}
-    healthcheck:
-      test: ["CMD-SHELL", "curl -s -I https://localhost:5601"]
-      interval: 10s
-      timeout: 10s
-      retries: 120
-
-volumes:
-  esdata01:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./data/esdata01
-  certs:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./certs
-  kibanadata:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./data/kibana
 networks:
   elastic:
