@@ -6,7 +6,7 @@ services:
     volumes:
       - esdata01:/usr/share/elasticsearch/data
       - certs:$CERTS_DIR
-      - eskeystore01:/usr/share/elasticsearch/config/elasticsearch.keystore
+      - ./keystore/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
 
     ports:
       - ${ES_PORT}:9200
@@ -78,12 +78,6 @@ volumes:
       o: bind
       type: none
       device: ./data/esdata01
-  eskeystore01:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./keystore/elasticsearch.keystore
   certs:
     driver: local
     driver_opts:
