@@ -30,20 +30,20 @@ services:
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
     volumes:
       - ./data/kibana:/usr/share/kibana/data
-      - ./certs:/usr/share/kibana/config/certs
+      - ./certs:/usr/share/kibana/certs
     ports:
       - ${KIBANA_PORT}:5601
     environment:
       - SERVERNAME=kibana
       - ELASTICSEARCH_HOSTS=https://es01:9200
       - SERVER_SSL_ENABLED=true
-      - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/elk.crt
-      - SERVER_SSL_KEY=/usr/share/kibana/config/certs/elk.key
+      - SERVER_SSL_CERTIFICATE=/usr/share/config/certs/elk.crt
+      - SERVER_SSL_KEY=/usr/share/kibana/certs/elk.key
       - SERVER_SSL_KEYPASSPHRASE=${KEYPASSPHRASE}
       - ELASTICSEARCH_USERNAME=kibana_system
       - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
-      - xpack.security.http.ssl.certificate_authorities=/usr/share/kibana/config/certs/ca.crt
-      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/config/certs/ca.crt
+      - xpack.security.http.ssl.certificate_authorities=/usr/share/kibana/certs/ca.crt
+      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/certs/ca.crt
     networks:
       - elastic
     depends_on:
