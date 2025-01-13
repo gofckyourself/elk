@@ -1,53 +1,50 @@
-version: "3.7"
-
 services:
-  es01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
-    volumes:
-      - ./data/esdata01:/usr/share/elasticsearch/data
-      - ./certs:$CERTS_DIR
-
-    ports:
-      - ${ES_PORT}:9200
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:"${STACK_VER}"
+    container_name: elasticsearch
     environment:
-      - xpack.security.enabled=true
       - node.name=es01
-      - xpack.security.transport.ssl.enabled=true
-      - xpack.security.transport.ssl.key=$CERTS_DIR/es01/elk.key
-      - xpack.security.transport.ssl.certificate=$CERTS_DIR/es01/elk.crt
-      - xpack.security.http.ssl.enabled=true
-      - xpack.security.http.ssl.key=$CERTS_DIR/es01/elk.key
-      - xpack.security.http.ssl.certificate=$CERTS_DIR/es01/elk.crt
+      - cluster.name=elasticsearch-cluster
       - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
       - ELASTIC_USERNAME=elastic
       - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
-
-    networks:
-      - elastic
-
-##  kibana:
-  kibana:
-    image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
+      - xpack.security.enabled=true
+      - xpack.security.http.ssl.enabled=true
+      - xpack.security.http.ssl.key=/usr/share/elasticsearch/config/certs/elasticsearch.key
+      - xpack.security.http.ssl.certificate=/usr/share/elasticsearch/config/certs/fullchain.crt
+      - xpack.security.transport.ssl.enabled=true
+      - xpack.security.transport.ssl.key=/usr/share/elasticsearch/config/certs/cert.key
+      - xpack.security.transport.ssl.certificate=/usr/share/elasticsearch/config/certs/fullchain.crt
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
     volumes:
-      - ./data/kibana:/usr/share/kibana/data
-      - ./certs:/usr/share/kibana/config/certs
+      - ./certs:/usr/share/elasticsearch/config/certs:ro
+      - elasticsearch_data:/usr/share/elasticsearch/data
     ports:
-      - ${KIBANA_PORT}:5601
-    environment:
-      - SERVERNAME=kibana
-      - ELASTICSEARCH_HOSTS=https://es01:9200
-      - SERVER_SSL_ENABLED=true
-      - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/elk.crt
-      - SERVER_SSL_KEY=/usr/share/kibana/config/certs/elk.key
-      - SERVER_SSL_KEYPASSPHRASE=${KEYPASSPHRASE}
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=${KIBANA_PASSWORD}
-      - xpack.security.http.ssl.certificate_authorities=/usr/share/kibana/config/certs/ca.crt
-      - ELASTICSEARCH_SSL_CERTIFICATEAUTHORITIES=/usr/share/kibana/config/certs/ca.crt
-    networks:
-      - elastic
-    depends_on:
-      - es01
+      - 9200:9200
+      - 9300:9300
 
-networks:
-  elastic:
+  kibana:
+    image: docker.elastic.co/kibana/kibana:"${STACK_VER}"
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    environment:
+      - SERVERNAME=kibana.local
+      - ELASTICSEARCH_HOSTS=https://elasticsearch:9200
+      - SERVER_SSL_ENABLED=true
+      - SERVER_SSL_KEY=/usr/share/kibana/config/certs/cert.key
+      - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/fullchain.crt
+      - ELASTICSEARCH_USERNAME=kibana_system
+      - ELASTICSEARCH_PASSWORD="${KIBANA_PWD}"
+    volumes:
+      - ./certs:/usr/share/kibana/config/certs:ro
+    ports:
+      - 5601:5601
+
+volumes:
+  elasticsearch_data:
