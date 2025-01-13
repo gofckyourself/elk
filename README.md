@@ -44,7 +44,7 @@
 
 ## Сброс пароля пользователя `kibana_system`
 
-    Нужно сбросить пароль для пользователя `kibana_system` и указать этот пароля в .env, используйте команду с `curl`:
+Нужно сбросить пароль для пользователя `kibana_system` и указать этот пароля в .env, используйте команду с `curl`:
 
     ```bash
     curl -X POST -u elastic 'https://localhost:9200/_security/user/kibana_system/_password' \
@@ -54,19 +54,19 @@
 
 ## Конфигурация SSL
 
-    Все соединения с Elasticsearch и Kibana защищены SSL-сертификатами. Сертификаты должны быть размещены в папке ./certs и включать:
+Все соединения с Elasticsearch и Kibana защищены SSL-сертификатами. Сертификаты должны быть размещены в папке ./certs и включать:
 
     privkey.pem — приватный ключ.
     fullchain.pem — сертификат.
 
 ## Обход блокировки для скачивания Docker-образов в РФ
-    Из-за ограничений на доступ к Docker-образам в России, вам возможно придется использовать VPN или другие способы для скачивания Docker-образов. Вот два варианта:
+Из-за ограничений на доступ к Docker-образам в России, вам возможно придется использовать VPN или другие способы для скачивания Docker-образов. Вот два варианта:
 
 1. Скачивание через Docker Save
 
-      Убедитесь, что у вас настроен VPN или доступ через сервер за пределами России.
+Убедитесь, что у вас настроен VPN или доступ через сервер за пределами России.
       
-      Используйте команду для скачивания и сохранения образов на локальной машине (укажите нужную версию из .env вместо STACK_VER):
+Используйте команду для скачивания и сохранения образов на локальной машине (укажите нужную версию из .env вместо STACK_VER):
       
       ```bash
       docker pull --platform=linux/amd64 docker.elastic.co/elasticsearch/elasticsearch:STACK_VER
@@ -75,7 +75,7 @@
       docker save -o kibana.tar docker.elastic.co/kibana/kibana:STACK_VER
       ```
     
-    Перенесите .tar файлы на сервер и загрузите их с помощью команды:
+Перенесите .tar файлы на сервер и загрузите их с помощью команды:
     ```bash
     docker load -i /path/to/elasticsearch.tar
     docker load -i /path/to/kibana.tar
@@ -83,14 +83,15 @@
 
 2. Скачивание через Skopeo
 
-      На macos может возникнуть баг при котором не удастся выгрузить скачанные образы в файл, для решения проблемы можно воспользоваться skopeo (можно установить через brew)
+На macos может возникнуть баг при котором не удастся выгрузить скачанные образы в файл, для решения проблемы можно воспользоваться skopeo (можно установить через brew)
 
       ```bash
       skopeo copy --override-arch amd64 --override-os linux docker://docker.elastic.co/kibana/kibana:STACK_VER docker-archive:kibana.tar
       skopeo copy --override-arch amd64 --override-os linux docker://docker.elastic.co/elasticsearch/elasticsearch:STACK_VER docker-archive:elastic.tar
       ```
 
-      Перенесите .tar файлы на сервер и загрузите их с помощью команды:
+Перенесите .tar файлы на сервер и загрузите их с помощью команды:
+
     ```bash
     docker load -i /path/to/elasticsearch.tar
     docker load -i /path/to/kibana.tar
