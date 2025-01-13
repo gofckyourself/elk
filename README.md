@@ -44,12 +44,13 @@
 
 ## Сброс пароля пользователя `kibana_system`
 
-Нужно сбросить пароль для пользователя `kibana_system` и указать этот пароля в .env, используйте команду с `curl`:
+    Нужно сбросить пароль для пользователя `kibana_system` и указать этот пароля в .env, используйте команду с `curl`:
 
-```bash
-curl -X POST -u elastic 'https://localhost:9200/_security/user/kibana_system/_password' \
--H 'Content-Type: application/json' \
--d '{"password": "new_password"}'
+    ```bash
+    curl -X POST -u elastic 'https://localhost:9200/_security/user/kibana_system/_password' \
+    -H 'Content-Type: application/json' \
+    -d '{"password": "new_password"}'
+    ```
 
 ## Конфигурация SSL
 
@@ -61,7 +62,8 @@ curl -X POST -u elastic 'https://localhost:9200/_security/user/kibana_system/_pa
 ## Обход блокировки для скачивания Docker-образов в РФ
     Из-за ограничений на доступ к Docker-образам в России, вам возможно придется использовать VPN или другие способы для скачивания Docker-образов. Вот два варианта:
 
-    1. Скачивание через Docker Save
+1. Скачивание через Docker Save
+
       Убедитесь, что у вас настроен VPN или доступ через сервер за пределами России.
       
       Используйте команду для скачивания и сохранения образов на локальной машине (укажите нужную версию из .env вместо STACK_VER):
@@ -78,8 +80,9 @@ curl -X POST -u elastic 'https://localhost:9200/_security/user/kibana_system/_pa
     docker load -i /path/to/elasticsearch.tar
     docker load -i /path/to/kibana.tar
     ```
-    
-    2. Скачивание через Skopeo
+
+2. Скачивание через Skopeo
+
       На macos может возникнуть баг при котором не удастся выгрузить скачанные образы в файл, для решения проблемы можно воспользоваться skopeo (можно установить через brew)
 
       ```bash
