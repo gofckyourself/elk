@@ -35,7 +35,7 @@ services:
       - elasticsearch
     environment:
       - SERVERNAME=kibana.local
-      - ELASTICSEARCH_HOSTS=https://es01.domain.ru:9200
+      - ELASTICSEARCH_HOSTS=${KIBANA_URL}:9200
       - SERVER_SSL_ENABLED=true
       - SERVER_SSL_KEY=/usr/share/kibana/config/certs/privkey.pem
       - SERVER_SSL_CERTIFICATE=/usr/share/kibana/config/certs/fullchain.pem
